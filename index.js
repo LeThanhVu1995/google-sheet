@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const { google } = require("googleapis");
-
 const bodyParser = require("body-parser");
+const nodeMailer = require("nodemailer");
 
 const app = express();
 
@@ -12,6 +12,29 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const port = process.env.PORT || 8000;
+const adminEmail = process.env.ADMIN_EMAIL || "lethanhvu20015@gmail.com";
+const adminPassword = process.env.ADMIN_PASSWORD || "kddierrlfrcsnkst";
+const mailHost = process.env.EMAIL_HOST || "smtp.gmail.com";
+const mailPort = +process.env.EMAIL_PORT || 587;
+
+const sendMail = (to, subject, htmlContent) => {
+  const transporter = nodeMailer.createTransport({
+    host: mailHost,
+    port: mailPort,
+    secure: false,
+    auth: {
+      user: adminEmail,
+      pass: adminPassword,
+    },
+  });
+  const options = {
+    from: adminEmail,
+    to: to,
+    subject: subject,
+    html: htmlContent,
+  };
+  return transporter.sendMail(options);
+};
 
 app.post("/saveInformation", async (req, res) => {
   const { email, fullname, mobile } = req.body;
@@ -46,6 +69,12 @@ app.post("/saveInformation", async (req, res) => {
       values: [[fullname, email, mobile]],
     },
   });
+
+  await sendMail(
+    email,
+    "Chúc mừng bạn đã đăng ký thành công.",
+    "<h1>Chúng tôi đã nhận được thông tin của bạn.</h1>"
+  );
 
   res.send({ success: true });
 });
