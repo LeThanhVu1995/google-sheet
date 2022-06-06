@@ -72,7 +72,7 @@ app.post("/saveInformation", async (req, res) => {
 
   await sendMail(
     email,
-    "Congratulations",
+    "Thank you for your info.",
     "<h1>Shopdi appreciates your spending time filling this information!.</h1>"
   );
 
