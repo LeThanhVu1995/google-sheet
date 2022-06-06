@@ -72,8 +72,8 @@ app.post("/saveInformation", async (req, res) => {
 
   await sendMail(
     email,
-    "Chúc mừng bạn đã đăng ký thành công.",
-    "<h1>Chúng tôi đã nhận được thông tin của bạn.</h1>"
+    "Congratulations",
+    "<h1>Shopdi appreciates your spending time filling this information!.</h1>"
   );
 
   res.send({ success: true });
